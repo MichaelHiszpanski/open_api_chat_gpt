@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:open_api_chat_gpt/chat_gpt/pallete.dart';
+import 'package:open_api_chat_gpt/core/screens/chat_gpt/pallete.dart';
 
 class FeatureBox extends StatelessWidget {
   final Color color;

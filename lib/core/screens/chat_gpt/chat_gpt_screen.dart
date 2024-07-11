@@ -1,10 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:open_api_chat_gpt/chat_gpt/feature_box.dart';
-import 'package:open_api_chat_gpt/chat_gpt/pallete.dart';
+import 'package:open_api_chat_gpt/core/screens/chat_gpt/feature_box.dart';
+import 'package:open_api_chat_gpt/core/screens/chat_gpt/pallete.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+@RoutePage()
 class ChatGPTScreen extends StatefulWidget {
   const ChatGPTScreen({super.key});
 
