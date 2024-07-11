@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:open_api_chat_gpt/core/screens/chat_gpt/feature_box.dart';
+import 'package:open_api_chat_gpt/core/screens/chat_gpt/open_api_services.dart';
 import 'package:open_api_chat_gpt/core/screens/chat_gpt/pallete.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -18,6 +19,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   final speechToText = SpeechToText();
   String lastWords = '';
   final flutterTts = FlutterTts();
+  OpenApiServices openApiServices = OpenApiServices();
   @override
   void initState() {
     super.initState();
@@ -160,7 +162,8 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                 speechToText.isNotListening) {
               await startListening();
             } else if (speechToText.isListening) {
-              await systemSpeak(lastWords);
+              await openApiServices.isArtPromptApi(lastWords);
+              //await systemSpeak(lastWords);
               await stopListening(); //stop when on
             } else {
               initSpeechToText();

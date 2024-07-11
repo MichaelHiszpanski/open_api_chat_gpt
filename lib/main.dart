@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:open_api_chat_gpt/core/screens/chat_gpt/chat_gpt_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
