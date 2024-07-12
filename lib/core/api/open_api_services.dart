@@ -27,6 +27,7 @@ class OpenApiServices {
               {"role": "user", "content": "Hello!"}
             ]
           }));
+      print("Send");
       print(res.body);
       if (res.statusCode == 200) {
         String response =
@@ -41,6 +42,7 @@ class OpenApiServices {
             final res = await dallEAPI(prompt);
             return res;
           default:
+            print(prompt);
             return chatGPTAPI(prompt);
         }
       }
@@ -64,9 +66,10 @@ class OpenApiServices {
           },
           body: jsonEncode({
             "model": "gpt-3.5-turbo-1106",
-            "messages": "Hello How are you?",
+            "messages": messages,
           }));
-
+      print("Response 1");
+      print(res.body.toString());
       if (res.statusCode == 200) {
         String response =
             jsonDecode(res.body)['choices'][0]['message']['content'];
@@ -75,14 +78,15 @@ class OpenApiServices {
           'role': 'assistant',
           'content': response,
         });
+        print("Response 2");
+        print(response);
+        return response;
       }
 
       return "Error";
     } catch (e) {
       return e.toString();
     }
-    // print(messages.toString());
-    // return "";
   }
 
   Future<String> dallEAPI(String prompt) async {

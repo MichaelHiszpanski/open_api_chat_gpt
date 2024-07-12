@@ -1,10 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/bloc/chat_gpt_bloc.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/feature_box.dart';
 import 'package:open_api_chat_gpt/core/api/open_api_services.dart';
 import 'package:open_api_chat_gpt/core/theme/pallete/pallete.dart';
+import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/feature_list.dart';
+import 'package:open_api_chat_gpt/feature/main_bloc/bloc/main_bloc.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -21,12 +24,6 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   String lastWords = '';
   final flutterTts = FlutterTts();
   OpenApiServices openApiServices = OpenApiServices();
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   initSpeechToText();
-  //   initTextToSpeech();
-  // }
   late ChatGptBloc chatGptBloc;
 
   @override
@@ -34,6 +31,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     super.initState();
     chatGptBloc = ChatGptBloc(apiService: openApiServices);
     initSpeechToText();
+    initTextToSpeech();
   }
 
   Future<void> initTextToSpeech() async {
@@ -63,6 +61,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   }
 
   Future<void> systemSpeak(String content) async {
+    // await flutterTts.stop();
     await flutterTts.speak(content);
   }
 
@@ -71,11 +70,14 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     super.dispose();
     speechToText.stop();
     flutterTts.stop();
+    chatGptBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (context) => chatGptBloc,
+      child: Scaffold(
         appBar: AppBar(
           title: const Text("Allen"),
           leading: const Icon(Icons.menu),
@@ -105,25 +107,44 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                   )
                 ],
               ),
-              //chat bubble
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 40)
-                    .copyWith(top: 30),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Pallete.blackColor),
-                    borderRadius: BorderRadius.circular(20).copyWith(
-                      topLeft: Radius.zero,
-                    )),
-                child: const Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Good morning, what task can I do for you?",
-                    style: TextStyle(
-                        color: Pallete.mainFontColor, fontFamily: "Cera Pro"),
-                  ),
-                ),
+              BlocBuilder<ChatGptBloc, ChatGptState>(
+                builder: (context, state) {
+                  if (state is ChatGptLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ChatGptSuccess) {
+                    context.read<MainBloc>().add(AddMessageEvent(
+                        role: 'assistant', content: state.response));
+                    systemSpeak(state.response);
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 40)
+                          .copyWith(top: 30),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Pallete.blackColor),
+                        borderRadius: BorderRadius.circular(20).copyWith(
+                          topLeft: Radius.zero,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          state.response,
+                          style: const TextStyle(
+                            color: Pallete.mainFontColor,
+                            fontFamily: "Cera Pro",
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (state is ChatGptFailure) {
+                    return Center(child: Text('Error: ${state.error}'));
+                  } else {
+                    return const Center(
+                        child:
+                            Text('Good morning, what task can I do for you?'));
+                  }
+                },
               ),
               Container(
                 padding: const EdgeInsets.all(10),
@@ -138,29 +159,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              //suggestion list
-              const Column(
-                children: [
-                  FeatureBox(
-                    color: Pallete.firstSuggestionBoxColor,
-                    headerText: "chatGpt",
-                    descriptionText:
-                        "Performing hot restart..3.0sRestarted application in 3,046ms.No observables detected in the build method of Observer",
-                  ),
-                  FeatureBox(
-                    color: Pallete.secondSuggestionBoxColor,
-                    headerText: "Dall-E",
-                    descriptionText:
-                        "Performing hot restart..3.0sRestarted application in 3,046ms.No observables detected in the build method of Observer",
-                  ),
-                  FeatureBox(
-                    color: Pallete.thirdSuggestionBoxColor,
-                    headerText: "Smart Voice Assistant",
-                    descriptionText:
-                        "Performing hot restart..3.0sRestarted application in 3,046ms.No observables detected in the build method of Observer",
-                  ),
-                ],
-              )
+              const FeatureList(),
             ],
           ),
         ),
@@ -171,14 +170,15 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                 speechToText.isNotListening) {
               await startListening();
             } else if (speechToText.isListening) {
-              await openApiServices.isArtPromptApi(lastWords);
-              //await systemSpeak(lastWords);
-              await stopListening(); //stop when on
+              chatGptBloc.add(SendMessageEvent(lastWords));
+              await stopListening();
             } else {
               initSpeechToText();
             }
           },
           child: const Icon(Icons.mic),
-        ));
+        ),
+      ),
+    );
   }
 }
