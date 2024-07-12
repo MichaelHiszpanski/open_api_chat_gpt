@@ -7,7 +7,7 @@ import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/feature_box.dart
 import 'package:open_api_chat_gpt/core/api/open_api_services.dart';
 import 'package:open_api_chat_gpt/core/theme/pallete/pallete.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/feature_list.dart';
-import 'package:open_api_chat_gpt/feature/main_bloc/bloc/main_bloc.dart';
+import 'package:open_api_chat_gpt/feature/main/bloc/main_bloc.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
