@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/chat_gpt_screen.dart';
-import 'package:open_api_chat_gpt/feature/main_bloc/bloc/main_bloc.dart';
+import 'package:open_api_chat_gpt/feature/main/bloc/main_bloc.dart';
+import 'package:open_api_chat_gpt/observer.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MyApp());
+  Bloc.observer = AppBlocObserver();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
