@@ -1,6 +1,20 @@
 part of 'chat_gpt_bloc.dart';
 
 @immutable
-sealed class ChatGptState {}
+abstract class ChatGptState {}
 
-final class ChatGptInitial extends ChatGptState {}
+class ChatGptInitial extends ChatGptState {}
+
+class ChatGptLoading extends ChatGptState {}
+
+class ChatGptSuccess extends ChatGptState {
+  final String response;
+
+  ChatGptSuccess(this.response);
+}
+
+class ChatGptFailure extends ChatGptState {
+  final String error;
+
+  ChatGptFailure(this.error);
+}

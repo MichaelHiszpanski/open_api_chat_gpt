@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:open_api_chat_gpt/feature/chat_gpt/bloc/chat_gpt_bloc.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/feature_box.dart';
 import 'package:open_api_chat_gpt/core/api/open_api_services.dart';
 import 'package:open_api_chat_gpt/core/theme/pallete/pallete.dart';
@@ -20,11 +21,19 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   String lastWords = '';
   final flutterTts = FlutterTts();
   OpenApiServices openApiServices = OpenApiServices();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   initSpeechToText();
+  //   initTextToSpeech();
+  // }
+  late ChatGptBloc chatGptBloc;
+
   @override
   void initState() {
     super.initState();
+    chatGptBloc = ChatGptBloc(apiService: openApiServices);
     initSpeechToText();
-    initTextToSpeech();
   }
 
   Future<void> initTextToSpeech() async {
