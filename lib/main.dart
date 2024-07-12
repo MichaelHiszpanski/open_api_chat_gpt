@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/presentation/chat_gpt_screen.dart';
 import 'package:open_api_chat_gpt/feature/main/bloc/main_bloc.dart';
 import 'package:open_api_chat_gpt/observer.dart';
+import 'package:open_api_chat_gpt/utils/providers/block_provider.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -16,8 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainBloc(),
+    return AppBlocProviders(
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

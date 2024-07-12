@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class OpenApiServices {
   final String _apiKey = dotenv.env['CHAT_GPT'] ?? '';
-  final List<Map<String, String>> messages = [];
-  Future<String> isArtPromptApi(String prompt) async {
+  Future<String> isArtPromptApi(
+      String prompt, List<Map<String, String>> messages) async {
     messages.add({
       'role': 'user',
       'content': prompt,
@@ -21,10 +21,11 @@ class OpenApiServices {
           body: jsonEncode({
             "model": "gpt-3.5-turbo-1106",
             "messages": [
-              // {
-              //   "role": "system", "content": "You are a helpful assistant."
-              //   },
-              {"role": "user", "content": "Hello!"}
+              {
+                "role": "user",
+                "content":
+                    "Does this message want to generate an AI picture, image, art or anything simliar? $prompt . Simply answer yes or no."
+              }
             ]
           }));
       print("Send");
@@ -43,7 +44,7 @@ class OpenApiServices {
             return res;
           default:
             print(prompt);
-            return chatGPTAPI(prompt);
+            return chatGPTAPI(prompt, messages);
         }
       }
       return "Body";
@@ -52,7 +53,8 @@ class OpenApiServices {
     }
   }
 
-  Future<String> chatGPTAPI(String prompt) async {
+  Future<String> chatGPTAPI(
+      String prompt, List<Map<String, String>> messages) async {
     messages.add({
       'role': 'user',
       'content': prompt,
