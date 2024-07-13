@@ -9,7 +9,7 @@ import 'package:open_api_chat_gpt/utils/providers/block_provider.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   Bloc.observer = AppBlocObserver();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
