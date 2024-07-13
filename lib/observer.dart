@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class AppBlocObserver extends BlocObserver {
-  // Format for timestamps
   final DateFormat _formatter = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
 
   @override

@@ -37,7 +37,6 @@ class ChatGptRepository {
 
   Future<String> getchatGPTAPI(
       String prompt, List<Map<String, String>> messages) async {
-    print("CHEK This getchatGPTAPI  1 ${prompt}");
     try {
       final chatGptData = await dataProvider.chatGPTAPI(prompt, messages);
       final data = jsonDecode(chatGptData);
@@ -45,11 +44,11 @@ class ChatGptRepository {
       if (data.containsKey('error')) {
         throw Exception(data['error']);
       }
-      print("CHEK This getchatGPTAPI  2 ${prompt}");
+
       if (data['choices'] != null && data['choices'].isNotEmpty) {
         String response = data['choices'][0]['message']['content'].trim();
         messages.add({'role': 'assistant', 'content': response});
-        print("ChatGPT response: $response");
+
         return response;
       } else {
         throw Exception("Invalid response from API: No choices found.");
