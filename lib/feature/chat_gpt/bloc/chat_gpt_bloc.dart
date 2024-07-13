@@ -19,10 +19,9 @@ class ChatGptBloc extends Bloc<ChatGptEvent, ChatGptState> {
       SendMessageEvent event, Emitter<ChatGptState> emit) async {
     emit(ChatGptLoading());
     try {
-      print("CHEK This bloc 1 ${event.runtimeType}");
       final response = await chatGptRepository.getArtPromptApi(
           event.prompt, mainBloc.messages);
-      print("CHEK This bloc 2  $response");
+
       mainBloc.add(AddMessageEvent(role: 'assistant', content: response));
       emit(ChatGptSuccess(response));
     } catch (e) {

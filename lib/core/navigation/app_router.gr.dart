@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ChatGPTScreen(),
       );
     },
+    ResultsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ResultsScreen(),
+      );
+    },
     SplashRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -40,6 +46,20 @@ class ChatGPTRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ChatGPTRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ResultsScreen]
+class ResultsRoute extends PageRouteInfo<void> {
+  const ResultsRoute({List<PageRouteInfo>? children})
+      : super(
+          ResultsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ResultsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

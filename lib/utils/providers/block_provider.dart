@@ -5,6 +5,7 @@ import 'package:open_api_chat_gpt/feature/chat_gpt/data/repository/chat_gpt_repo
 import 'package:open_api_chat_gpt/feature/main/bloc/main_bloc.dart';
 import 'package:open_api_chat_gpt/core/api/open_api_services.dart';
 import 'package:open_api_chat_gpt/feature/chat_gpt/data/data_provider/data_provider.dart';
+import 'package:open_api_chat_gpt/feature/results/bloc/results_bloc.dart';
 
 class AppBlocProviders extends StatelessWidget {
   final Widget child;
@@ -27,6 +28,7 @@ class AppBlocProviders extends StatelessWidget {
                 chatGptRepository: apiService, mainBloc: mainBloc);
           },
         ),
+        BlocProvider<ResultsBloc>(create: (context) => ResultsBloc())
       ],
       child: child,
     );

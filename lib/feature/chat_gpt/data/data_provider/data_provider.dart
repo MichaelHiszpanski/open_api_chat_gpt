@@ -6,7 +6,6 @@ class DataProvider {
   final String _apiKey = dotenv.env['CHAT_GPT'] ?? '';
 
   Future<String> isArtPromptApi(String prompt) async {
-    print("CHEK This provider 1  ${prompt}");
     try {
       final res = await http.post(
         Uri.parse("https://api.openai.com/v1/chat/completions"),
@@ -24,7 +23,6 @@ class DataProvider {
           ]
         }),
       );
-      print("CHEK This provider  2 ${prompt}");
       if (res.statusCode == 200) {
         print("CHEK This provider  200 ${res.body}");
         return res.body;
@@ -40,7 +38,6 @@ class DataProvider {
 
   Future<String> chatGPTAPI(
       String prompt, List<Map<String, String>> messages) async {
-    print("CHEK This provider chatGPTAP 1  ${prompt}");
     try {
       final res = await http.post(
         Uri.parse("https://api.openai.com/v1/chat/completions"),
@@ -53,7 +50,7 @@ class DataProvider {
           "messages": messages,
         }),
       );
-      print("CHEK This provider chatGPTAP 2  ${res.body}");
+
       if (res.statusCode == 200) {
         return res.body;
       } else {
