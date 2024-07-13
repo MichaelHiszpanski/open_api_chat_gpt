@@ -203,7 +203,9 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                 await startListening();
               } else if (speechToText.isListening) {
                 await stopListening();
-                context.read<ChatGptBloc>().add(SendMessageEvent(lastWords));
+                if (mounted) {
+                  context.read<ChatGptBloc>().add(SendMessageEvent(lastWords));
+                }
               } else {
                 initSpeechToText();
               }

@@ -21,7 +21,7 @@ class DataProvider {
               "role": "user",
               "content": prompt,
             }
-          ] // "Does this message want to generate an AI picture, image, art or anything similar? $prompt. Simply answer yes or no."
+          ]
         }),
       );
       print("CHEK This provider  2 ${prompt}");
@@ -34,7 +34,6 @@ class DataProvider {
             {"error": "Error!: ${res.statusCode} ${res.reasonPhrase}"});
       }
     } catch (e) {
-      // Return a JSON object indicating an exception
       return jsonEncode({"error": "Error: $e"});
     }
   }
@@ -58,17 +57,37 @@ class DataProvider {
       if (res.statusCode == 200) {
         return res.body;
       } else {
-        // Return a JSON object indicating an error
         return jsonEncode(
             {"error": "Error: ${res.statusCode} ${res.reasonPhrase}"});
       }
     } catch (e) {
-      // Return a JSON object indicating an exception
       return jsonEncode({"error": "Error: $e"});
     }
   }
 
   Future<String> dallEAPI(String prompt) async {
-    return "dalle";
+    try {
+      final res = await http.post(
+        Uri.parse("https://api.openai.com/v1/images/generations"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $_apiKey",
+        },
+        body: jsonEncode({
+          "model": "dall-e-3",
+          "messages": prompt,
+          "n": 1,
+          "size": "1024x1024"
+        }),
+      );
+      if (res.statusCode == 200) {
+        return res.body;
+      } else {
+        return jsonEncode(
+            {"error": "Error: ${res.statusCode} ${res.reasonPhrase}"});
+      }
+    } catch (e) {
+      return jsonEncode({"error": "Error: $e"});
+    }
   }
 }
